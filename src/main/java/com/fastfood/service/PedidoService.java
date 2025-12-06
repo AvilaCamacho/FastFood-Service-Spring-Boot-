@@ -76,6 +76,10 @@ public class PedidoService {
             throw new IllegalArgumentException("Pedido no encontrado con id: " + id);
         }
 
+        if (nuevoEstado == null || nuevoEstado.trim().isEmpty()) {
+            throw new IllegalArgumentException("El estado es obligatorio");
+        }
+
         // Validar estados permitidos
         List<String> estadosPermitidos = List.of("PENDIENTE", "EN_PREPARACION", "LISTO", "ENTREGADO", "CANCELADO");
         if (!estadosPermitidos.contains(nuevoEstado.toUpperCase())) {

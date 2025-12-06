@@ -34,7 +34,7 @@ public class ProductoRepository {
 
     public List<Producto> findByCategoria(String categoria) {
         return productos.values().stream()
-                .filter(p -> p.getCategoria().equalsIgnoreCase(categoria))
+                .filter(p -> p.getCategoria() != null && p.getCategoria().equalsIgnoreCase(categoria))
                 .toList();
     }
 

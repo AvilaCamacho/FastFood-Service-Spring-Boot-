@@ -47,7 +47,7 @@ public class ProductoService {
         }
         
         Producto producto = productoExistente.get();
-        if (productoActualizado.getNombre() != null) {
+        if (productoActualizado.getNombre() != null && !productoActualizado.getNombre().trim().isEmpty()) {
             producto.setNombre(productoActualizado.getNombre());
         }
         if (productoActualizado.getDescripcion() != null) {

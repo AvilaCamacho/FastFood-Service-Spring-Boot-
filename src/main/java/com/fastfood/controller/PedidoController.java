@@ -66,7 +66,7 @@ public class PedidoController {
                                                      @RequestBody Map<String, String> request) {
         try {
             String nuevoEstado = request.get("estado");
-            if (nuevoEstado == null || nuevoEstado.isEmpty()) {
+            if (nuevoEstado == null || nuevoEstado.trim().isEmpty()) {
                 return new ResponseEntity<>("El estado es obligatorio", HttpStatus.BAD_REQUEST);
             }
             Pedido pedidoActualizado = pedidoService.actualizarEstadoPedido(id, nuevoEstado);

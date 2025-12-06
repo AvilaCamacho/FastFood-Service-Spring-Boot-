@@ -43,10 +43,10 @@ public class ClienteService {
         }
         
         Cliente cliente = clienteExistente.get();
-        if (clienteActualizado.getNombre() != null) {
+        if (clienteActualizado.getNombre() != null && !clienteActualizado.getNombre().trim().isEmpty()) {
             cliente.setNombre(clienteActualizado.getNombre());
         }
-        if (clienteActualizado.getEmail() != null) {
+        if (clienteActualizado.getEmail() != null && !clienteActualizado.getEmail().trim().isEmpty()) {
             cliente.setEmail(clienteActualizado.getEmail());
         }
         if (clienteActualizado.getTelefono() != null) {
