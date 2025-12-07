@@ -1,0 +1,983 @@
+<!doctype doctype>
+<html lang="es">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FastFood Admin Panel</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 100%;
+            height: 100%;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            min-height: 100%;
+            padding: 2rem;
+        }
+
+        header {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            margin: 0;
+            color: #667eea;
+            font-size: 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            background: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #667eea;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .tab-button.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .form-section h2 {
+            margin-top: 0;
+            color: #667eea;
+            font-size: 1.5rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        input, select, textarea {
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .data-table th {
+            background: #667eea;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .data-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .data-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-buttons button {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .message {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .filter-section {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+            color: #667eea;
+            font-size: 1.2rem;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #6c757d;
+        }
+
+        .empty-state svg {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .badge-pending {
+            background: #ffc107;
+            color: #000;
+        }
+
+        .badge-preparing {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .badge-ready {
+            background: #28a745;
+            color: white;
+        }
+
+        .badge-delivered {
+            background: #6c757d;
+            color: white;
+        }
+
+        .price {
+            font-weight: 700;
+            color: #28a745;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            header {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .data-table {
+                font-size: 0.875rem;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="container">
+   <header>
+    <h1 id="app-title">FastFood Admin Panel 🍔</h1>
+   </header>
+   <div class="tabs"><button class="tab-button active" data-tab="clientes">👥 Clientes</button> <button class="tab-button" data-tab="productos">🍔 Productos</button> <button class="tab-button" data-tab="pedidos">📋 Pedidos</button>
+   </div><!-- CLIENTES TAB -->
+   <div id="clientes-tab" class="tab-content active">
+    <div class="message" id="clientes-message"></div>
+    <div class="form-section">
+     <h2>➕ Agregar/Editar Cliente</h2>
+     <form id="cliente-form"><input type="hidden" id="cliente-id">
+      <div class="form-grid">
+       <div class="form-group"><label for="cliente-nombre">Nombre</label> <input type="text" id="cliente-nombre" required>
+       </div>
+       <div class="form-group"><label for="cliente-email">Email</label> <input type="email" id="cliente-email" required>
+       </div>
+       <div class="form-group"><label for="cliente-telefono">Teléfono</label> <input type="tel" id="cliente-telefono" required>
+       </div>
+      </div>
+      <div class="button-group"><button type="submit" class="btn-primary">Guardar Cliente</button> <button type="button" class="btn-secondary" onclick="resetClienteForm()">Limpiar</button>
+      </div>
+     </form>
+    </div>
+    <div class="loading" id="clientes-loading">
+     Cargando clientes...
+    </div>
+    <div id="clientes-list"></div>
+   </div><!-- PRODUCTOS TAB -->
+   <div id="productos-tab" class="tab-content">
+    <div class="message" id="productos-message"></div>
+    <div class="form-section">
+     <h2>➕ Agregar/Editar Producto</h2>
+     <form id="producto-form"><input type="hidden" id="producto-id">
+      <div class="form-grid">
+       <div class="form-group"><label for="producto-nombre">Nombre</label> <input type="text" id="producto-nombre" required>
+       </div>
+       <div class="form-group"><label for="producto-categoria">Categoría</label> <select id="producto-categoria" required> <option value="">Seleccionar...</option> <option value="HAMBURGUESAS">Hamburguesas</option> <option value="ACOMPAÑAMIENTOS">Acompañamientos</option> <option value="BEBIDAS">Bebidas</option> <option value="POSTRES">Postres</option> </select>
+       </div>
+       <div class="form-group"><label for="producto-precio">Precio ($)</label> <input type="number" id="producto-precio" step="0.01" min="0" required>
+       </div>
+      </div>
+      <div class="form-group"><label for="producto-descripcion">Descripción</label> <textarea id="producto-descripcion" required></textarea>
+      </div>
+      <div class="button-group"><button type="submit" class="btn-primary">Guardar Producto</button> <button type="button" class="btn-secondary" onclick="resetProductoForm()">Limpiar</button>
+      </div>
+     </form>
+    </div>
+    <div class="filter-section">
+     <div class="filter-group">
+      <div class="form-group"><label for="filter-categoria">Filtrar por Categoría</label> <select id="filter-categoria" onchange="loadProductos()"> <option value="">Todas las categorías</option> <option value="HAMBURGUESAS">Hamburguesas</option> <option value="ACOMPAÑAMIENTOS">Acompañamientos</option> <option value="BEBIDAS">Bebidas</option> <option value="POSTRES">Postres</option> </select>
+      </div>
+     </div>
+    </div>
+    <div class="loading" id="productos-loading">
+     Cargando productos...
+    </div>
+    <div id="productos-list"></div>
+   </div><!-- PEDIDOS TAB -->
+   <div id="pedidos-tab" class="tab-content">
+    <div class="message" id="pedidos-message"></div>
+    <div class="form-section">
+     <h2>➕ Crear Pedido</h2>
+     <form id="pedido-form">
+      <div class="form-grid">
+       <div class="form-group"><label for="pedido-cliente">Cliente</label> <select id="pedido-cliente" required> <option value="">Seleccionar cliente...</option> </select>
+       </div>
+      </div>
+      <div class="form-group"><label for="pedido-productos">Productos (mantén Ctrl para seleccionar múltiples)</label> <select id="pedido-productos" multiple required style="min-height: 120px;"> </select>
+      </div>
+      <div class="button-group"><button type="submit" class="btn-primary">Crear Pedido</button> <button type="button" class="btn-secondary" onclick="resetPedidoForm()">Limpiar</button>
+      </div>
+     </form>
+    </div>
+    <div class="filter-section">
+     <div class="filter-group">
+      <div class="form-group"><label for="filter-cliente-pedido">Filtrar por Cliente</label> <select id="filter-cliente-pedido" onchange="loadPedidos()"> <option value="">Todos los clientes</option> </select>
+      </div>
+      <div class="form-group"><label for="filter-estado">Filtrar por Estado</label> <select id="filter-estado" onchange="loadPedidos()"> <option value="">Todos los estados</option> <option value="PENDING">Pendiente</option> <option value="PREPARING">Preparando</option> <option value="READY">Listo</option> <option value="DELIVERED">Entregado</option> </select>
+      </div>
+     </div>
+    </div>
+    <div class="loading" id="pedidos-loading">
+     Cargando pedidos...
+    </div>
+    <div id="pedidos-list"></div>
+   </div>
+  </div>
+  <script>
+        const defaultConfig = {
+            app_title: "FastFood Admin Panel 🍔",
+            api_url: "http://localhost:8080/api"
+        };
+
+        let API_BASE_URL = defaultConfig.api_url;
+
+        // Initialize Element SDK
+        async function onConfigChange(config) {
+            const appTitle = config.app_title || defaultConfig.app_title;
+            const apiUrl = config.api_url || defaultConfig.api_url;
+            
+            document.getElementById('app-title').textContent = appTitle;
+            API_BASE_URL = apiUrl;
+        }
+
+        window.elementSdk.init({
+            defaultConfig: defaultConfig,
+            onConfigChange: onConfigChange,
+            mapToCapabilities: (config) => ({
+                recolorables: [
+                    {
+                        get: () => config.background_color || "#667eea",
+                        set: (value) => {
+                            config.background_color = value;
+                            window.elementSdk.setConfig({ background_color: value });
+                        }
+                    }
+                ],
+                borderables: [],
+                fontEditable: undefined,
+                fontSizeable: undefined
+            }),
+            mapToEditPanelValues: (config) => new Map([
+                ["app_title", config.app_title || defaultConfig.app_title],
+                ["api_url", config.api_url || defaultConfig.api_url]
+            ])
+        });
+
+        // Tab functionality
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const tabName = button.dataset.tab;
+                
+                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                
+                button.classList.add('active');
+                document.getElementById(`${tabName}-tab`).classList.add('active');
+                
+                if (tabName === 'clientes') loadClientes();
+                if (tabName === 'productos') loadProductos();
+                if (tabName === 'pedidos') {
+                    loadClientesForSelect();
+                    loadProductosForSelect();
+                    loadPedidos();
+                }
+            });
+        });
+
+        // Utility functions
+        function showMessage(section, message, isError = false) {
+            const messageEl = document.getElementById(`${section}-message`);
+            messageEl.textContent = message;
+            messageEl.className = `message ${isError ? 'error' : 'success'} show`;
+            setTimeout(() => messageEl.classList.remove('show'), 5000);
+        }
+
+        function showLoading(section, show) {
+            const loadingEl = document.getElementById(`${section}-loading`);
+            loadingEl.classList.toggle('show', show);
+        }
+
+        // CLIENTES functions
+        async function loadClientes() {
+            showLoading('clientes', true);
+            try {
+                const response = await fetch(`${API_BASE_URL}/clientes`);
+                const clientes = await response.json();
+                
+                const listEl = document.getElementById('clientes-list');
+                
+                if (clientes.length === 0) {
+                    listEl.innerHTML = `
+                        <div class="empty-state">
+                            <p>No hay clientes registrados</p>
+                            <p>Agrega tu primer cliente usando el formulario de arriba</p>
+                        </div>
+                    `;
+                } else {
+                    listEl.innerHTML = `
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Email</th>
+                                    <th>Teléfono</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${clientes.map(cliente => `
+                                    <tr>
+                                        <td>${cliente.id}</td>
+                                        <td>${cliente.nombre}</td>
+                                        <td>${cliente.email}</td>
+                                        <td>${cliente.telefono}</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="btn-primary" onclick="editCliente(${cliente.id})">Editar</button>
+                                                <button class="btn-danger" onclick="deleteCliente(${cliente.id})">Eliminar</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                }
+            } catch (error) {
+                showMessage('clientes', 'Error al cargar clientes: ' + error.message, true);
+            } finally {
+                showLoading('clientes', false);
+            }
+        }
+
+        document.getElementById('cliente-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const id = document.getElementById('cliente-id').value;
+            const cliente = {
+                nombre: document.getElementById('cliente-nombre').value,
+                email: document.getElementById('cliente-email').value,
+                telefono: document.getElementById('cliente-telefono').value
+            };
+
+            const button = e.submitter;
+            button.disabled = true;
+            button.textContent = 'Guardando...';
+
+            try {
+                const url = id ? `${API_BASE_URL}/clientes/${id}` : `${API_BASE_URL}/clientes`;
+                const method = id ? 'PUT' : 'POST';
+                
+                const response = await fetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(cliente)
+                });
+
+                if (response.ok) {
+                    showMessage('clientes', id ? 'Cliente actualizado correctamente' : 'Cliente creado correctamente');
+                    resetClienteForm();
+                    loadClientes();
+                } else {
+                    showMessage('clientes', 'Error al guardar cliente', true);
+                }
+            } catch (error) {
+                showMessage('clientes', 'Error: ' + error.message, true);
+            } finally {
+                button.disabled = false;
+                button.textContent = 'Guardar Cliente';
+            }
+        });
+
+        async function editCliente(id) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/clientes/${id}`);
+                const cliente = await response.json();
+                
+                document.getElementById('cliente-id').value = cliente.id;
+                document.getElementById('cliente-nombre').value = cliente.nombre;
+                document.getElementById('cliente-email').value = cliente.email;
+                document.getElementById('cliente-telefono').value = cliente.telefono;
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } catch (error) {
+                showMessage('clientes', 'Error al cargar cliente: ' + error.message, true);
+            }
+        }
+
+        async function deleteCliente(id) {
+            const confirmDelete = confirm('¿Estás seguro de eliminar este cliente?');
+            if (!confirmDelete) return;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/clientes/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    showMessage('clientes', 'Cliente eliminado correctamente');
+                    loadClientes();
+                } else {
+                    showMessage('clientes', 'Error al eliminar cliente', true);
+                }
+            } catch (error) {
+                showMessage('clientes', 'Error: ' + error.message, true);
+            }
+        }
+
+        function resetClienteForm() {
+            document.getElementById('cliente-form').reset();
+            document.getElementById('cliente-id').value = '';
+        }
+
+        // PRODUCTOS functions
+        async function loadProductos() {
+            showLoading('productos', true);
+            try {
+                const categoria = document.getElementById('filter-categoria').value;
+                const url = categoria 
+                    ? `${API_BASE_URL}/productos?categoria=${categoria}`
+                    : `${API_BASE_URL}/productos`;
+                
+                const response = await fetch(url);
+                const productos = await response.json();
+                
+                const listEl = document.getElementById('productos-list');
+                
+                if (productos.length === 0) {
+                    listEl.innerHTML = `
+                        <div class="empty-state">
+                            <p>No hay productos registrados</p>
+                            <p>Agrega tu primer producto usando el formulario de arriba</p>
+                        </div>
+                    `;
+                } else {
+                    listEl.innerHTML = `
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Categoría</th>
+                                    <th>Precio</th>
+                                    <th>Descripción</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${productos.map(producto => `
+                                    <tr>
+                                        <td>${producto.id}</td>
+                                        <td>${producto.nombre}</td>
+                                        <td>${producto.categoria}</td>
+                                        <td class="price">$${producto.precio.toFixed(2)}</td>
+                                        <td>${producto.descripcion}</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="btn-primary" onclick="editProducto(${producto.id})">Editar</button>
+                                                <button class="btn-danger" onclick="deleteProducto(${producto.id})">Eliminar</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                }
+            } catch (error) {
+                showMessage('productos', 'Error al cargar productos: ' + error.message, true);
+            } finally {
+                showLoading('productos', false);
+            }
+        }
+
+        document.getElementById('producto-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const id = document.getElementById('producto-id').value;
+            const producto = {
+                nombre: document.getElementById('producto-nombre').value,
+                descripcion: document.getElementById('producto-descripcion').value,
+                precio: parseFloat(document.getElementById('producto-precio').value),
+                categoria: document.getElementById('producto-categoria').value
+            };
+
+            const button = e.submitter;
+            button.disabled = true;
+            button.textContent = 'Guardando...';
+
+            try {
+                const url = id ? `${API_BASE_URL}/productos/${id}` : `${API_BASE_URL}/productos`;
+                const method = id ? 'PUT' : 'POST';
+                
+                const response = await fetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(producto)
+                });
+
+                if (response.ok) {
+                    showMessage('productos', id ? 'Producto actualizado correctamente' : 'Producto creado correctamente');
+                    resetProductoForm();
+                    loadProductos();
+                } else {
+                    showMessage('productos', 'Error al guardar producto', true);
+                }
+            } catch (error) {
+                showMessage('productos', 'Error: ' + error.message, true);
+            } finally {
+                button.disabled = false;
+                button.textContent = 'Guardar Producto';
+            }
+        });
+
+        async function editProducto(id) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/productos/${id}`);
+                const producto = await response.json();
+                
+                document.getElementById('producto-id').value = producto.id;
+                document.getElementById('producto-nombre').value = producto.nombre;
+                document.getElementById('producto-descripcion').value = producto.descripcion;
+                document.getElementById('producto-precio').value = producto.precio;
+                document.getElementById('producto-categoria').value = producto.categoria;
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } catch (error) {
+                showMessage('productos', 'Error al cargar producto: ' + error.message, true);
+            }
+        }
+
+        async function deleteProducto(id) {
+            const confirmDelete = confirm('¿Estás seguro de eliminar este producto?');
+            if (!confirmDelete) return;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/productos/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    showMessage('productos', 'Producto eliminado correctamente');
+                    loadProductos();
+                } else {
+                    showMessage('productos', 'Error al eliminar producto', true);
+                }
+            } catch (error) {
+                showMessage('productos', 'Error: ' + error.message, true);
+            }
+        }
+
+        function resetProductoForm() {
+            document.getElementById('producto-form').reset();
+            document.getElementById('producto-id').value = '';
+        }
+
+        // PEDIDOS functions
+        async function loadClientesForSelect() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/clientes`);
+                const clientes = await response.json();
+                
+                const selectEl = document.getElementById('pedido-cliente');
+                const filterEl = document.getElementById('filter-cliente-pedido');
+                
+                const options = clientes.map(c => 
+                    `<option value="${c.id}">${c.nombre} (${c.email})</option>`
+                ).join('');
+                
+                selectEl.innerHTML = '<option value="">Seleccionar cliente...</option>' + options;
+                filterEl.innerHTML = '<option value="">Todos los clientes</option>' + options;
+            } catch (error) {
+                console.error('Error loading clientes:', error);
+            }
+        }
+
+        async function loadProductosForSelect() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/productos`);
+                const productos = await response.json();
+                
+                const selectEl = document.getElementById('pedido-productos');
+                selectEl.innerHTML = productos.map(p => 
+                    `<option value="${p.id}">${p.nombre} - $${p.precio.toFixed(2)} (${p.categoria})</option>`
+                ).join('');
+            } catch (error) {
+                console.error('Error loading productos:', error);
+            }
+        }
+
+        async function loadPedidos() {
+            showLoading('pedidos', true);
+            try {
+                const clienteId = document.getElementById('filter-cliente-pedido').value;
+                const estado = document.getElementById('filter-estado').value;
+                
+                let url = `${API_BASE_URL}/pedidos`;
+                const params = [];
+                if (clienteId) params.push(`clienteId=${clienteId}`);
+                if (estado) params.push(`estado=${estado}`);
+                if (params.length > 0) url += '?' + params.join('&');
+                
+                const response = await fetch(url);
+                const pedidos = await response.json();
+                
+                const listEl = document.getElementById('pedidos-list');
+                
+                if (pedidos.length === 0) {
+                    listEl.innerHTML = `
+                        <div class="empty-state">
+                            <p>No hay pedidos registrados</p>
+                            <p>Crea tu primer pedido usando el formulario de arriba</p>
+                        </div>
+                    `;
+                } else {
+                    listEl.innerHTML = `
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Cliente ID</th>
+                                    <th>Productos IDs</th>
+                                    <th>Total</th>
+                                    <th>Estado</th>
+                                    <th>Fecha</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${pedidos.map(pedido => `
+                                    <tr>
+                                        <td>${pedido.id}</td>
+                                        <td>${pedido.clienteId}</td>
+                                        <td>${pedido.productosIds ? pedido.productosIds.join(', ') : 'N/A'}</td>
+                                        <td class="price">$${pedido.total ? pedido.total.toFixed(2) : '0.00'}</td>
+                                        <td><span class="badge badge-${pedido.estado ? pedido.estado.toLowerCase() : 'pending'}">${pedido.estado || 'PENDING'}</span></td>
+                                        <td>${pedido.fecha ? new Date(pedido.fecha).toLocaleString() : 'N/A'}</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <select onchange="updateEstado(${pedido.id}, this.value)" style="padding: 0.5rem;">
+                                                    <option value="">Cambiar estado...</option>
+                                                    <option value="PENDING">Pendiente</option>
+                                                    <option value="PREPARING">Preparando</option>
+                                                    <option value="READY">Listo</option>
+                                                    <option value="DELIVERED">Entregado</option>
+                                                </select>
+                                                <button class="btn-danger" onclick="deletePedido(${pedido.id})">Eliminar</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                }
+            } catch (error) {
+                showMessage('pedidos', 'Error al cargar pedidos: ' + error.message, true);
+            } finally {
+                showLoading('pedidos', false);
+            }
+        }
+
+        document.getElementById('pedido-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const clienteId = parseInt(document.getElementById('pedido-cliente').value);
+            const productosSelect = document.getElementById('pedido-productos');
+            const productosIds = Array.from(productosSelect.selectedOptions).map(opt => parseInt(opt.value));
+
+            if (productosIds.length === 0) {
+                showMessage('pedidos', 'Debes seleccionar al menos un producto', true);
+                return;
+            }
+
+            const pedido = {
+                clienteId: clienteId,
+                productosIds: productosIds
+            };
+
+            const button = e.submitter;
+            button.disabled = true;
+            button.textContent = 'Creando pedido...';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/pedidos`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(pedido)
+                });
+
+                if (response.ok) {
+                    showMessage('pedidos', 'Pedido creado correctamente');
+                    resetPedidoForm();
+                    loadPedidos();
+                } else {
+                    showMessage('pedidos', 'Error al crear pedido', true);
+                }
+            } catch (error) {
+                showMessage('pedidos', 'Error: ' + error.message, true);
+            } finally {
+                button.disabled = false;
+                button.textContent = 'Crear Pedido';
+            }
+        });
+
+        async function updateEstado(pedidoId, nuevoEstado) {
+            if (!nuevoEstado) return;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/pedidos/${pedidoId}/estado`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ estado: nuevoEstado })
+                });
+
+                if (response.ok) {
+                    showMessage('pedidos', 'Estado actualizado correctamente');
+                    loadPedidos();
+                } else {
+                    showMessage('pedidos', 'Error al actualizar estado', true);
+                }
+            } catch (error) {
+                showMessage('pedidos', 'Error: ' + error.message, true);
+            }
+        }
+
+        async function deletePedido(id) {
+            const confirmDelete = confirm('¿Estás seguro de eliminar este pedido?');
+            if (!confirmDelete) return;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/pedidos/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    showMessage('pedidos', 'Pedido eliminado correctamente');
+                    loadPedidos();
+                } else {
+                    showMessage('pedidos', 'Error al eliminar pedido', true);
+                }
+            } catch (error) {
+                showMessage('pedidos', 'Error: ' + error.message, true);
+            }
+        }
+
+        function resetPedidoForm() {
+            document.getElementById('pedido-form').reset();
+        }
+
+        // Load initial data
+        loadClientes();
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9aa0600f609e0695',t:'MTc2NTA3MjI1OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
