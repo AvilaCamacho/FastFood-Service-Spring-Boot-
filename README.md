@@ -1,24 +1,18 @@
-# FastFood Service - Spring Boot 🍔🍟
-
+FastFood Service - Spring Boot 🍔🍟
 Sistema backend de pedidos de comida rápida desarrollado con Spring Boot. Este proyecto incluye modelos de Cliente, Producto y Pedido; controladores REST para crear y consultar datos; y servicios con la lógica del negocio. Los datos se almacenan temporalmente en memoria con estructuras thread-safe (ConcurrentHashMap).
-
-## 📋 Características
-
+📋 Características
 - **Gestión de Clientes**: Crear, consultar, actualizar y eliminar clientes
 - **Gestión de Productos**: CRUD completo de productos con filtrado por categoría
 - **Gestión de Pedidos**: Crear pedidos, consultar por cliente o estado, actualizar estado
 - **Almacenamiento en Memoria**: Uso de ConcurrentHashMap para almacenamiento thread-safe
 - **API REST**: Endpoints RESTful completos para todas las operaciones
 - **Validaciones**: Validación de datos en la capa de servicios
-
-## 🛠️ Tecnologías
-
+Tecnologías
 - Java 17
 - Spring Boot 3.1.5
 - Maven
 - Spring Web
-
-## 📁 Estructura del Proyecto
+Estructura del Proyecto
 
 ```
 src/main/java/com/fastfood/
@@ -40,42 +34,28 @@ src/main/java/com/fastfood/
     ├── ProductoController.java
     └── PedidoController.java
 ```
-
-## 🚀 Cómo Ejecutar
-
-### Requisitos Previos
 - Java 17 o superior
 - Maven 3.6 o superior
-
-### Comandos para Ejecutar
-
 1. **Clonar el repositorio:**
 ```bash
 git clone https://github.com/AvilaCamacho/FastFood-Service-Spring-Boot-.git
 cd FastFood-Service-Spring-Boot-
 ```
-
 2. **Compilar el proyecto:**
 ```bash
 mvn clean install
 ```
-
 3. **Ejecutar la aplicación:**
 ```bash
 mvn spring-boot:run
 ```
-
 O alternativamente:
 ```bash
 java -jar target/fastfood-service-1.0.0.jar
 ```
-
 La aplicación estará disponible en: `http://localhost:8080`
-
-## 📡 API Endpoints
-
-### Clientes
-
+## 📡 API Endpoints FLOW PARA LA PRUEBA DE RESPONSE 
+## Clientes
 | Método | Endpoint | Descripción |
 |--------|----------|-------------|
 | POST | `/api/clientes` | Crear un nuevo cliente |
@@ -264,27 +244,6 @@ Estados permitidos:
   "fecha": LocalDateTime
 }
 ```
-
-## 🔒 Características de Seguridad Thread-Safe
-
 - Uso de `ConcurrentHashMap` para almacenamiento de datos
 - `AtomicLong` para generación de IDs únicos
 - Operaciones atómicas garantizadas en entornos multi-hilo
-
-## 🎯 Próximos Pasos / Mejoras Futuras
-
-- Integración con base de datos (H2, MySQL, PostgreSQL)
-- Autenticación y autorización (Spring Security)
-- Validaciones con Bean Validation
-- Documentación con Swagger/OpenAPI
-- Manejo global de excepciones
-- Tests unitarios e integración
-- Paginación y ordenamiento de resultados
-
-## 👨‍💻 Autor
-
-AvilaCamacho
-
-## 📄 Licencia
-
-Este proyecto es de código abierto y está disponible para fines educativos.
