@@ -28,6 +28,18 @@ public class Pedido {
         this.fecha = LocalDateTime.now();
     }
 
+    // Constructor de copia para crear snapshots
+    public Pedido(Pedido other) {
+        if (other != null) {
+            this.id = other.id;
+            this.clienteId = other.clienteId;
+            this.productosIds = other.productosIds != null ? new ArrayList<>(other.productosIds) : new ArrayList<>();
+            this.total = other.total;
+            this.estado = other.estado;
+            this.fecha = other.fecha;
+        }
+    }
+
     public Long getId() {
         return id;
     }

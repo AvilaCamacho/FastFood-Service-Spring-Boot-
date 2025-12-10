@@ -85,4 +85,46 @@ public class PedidoController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
+
+    @PostMapping("/rollback")
+    public ResponseEntity<?> realizarRollback() {
+        try {
+            com.fastfood.model.OperationRecord operacionRevertida = pedidoService.realizarRollback();
+            
+            // Obtener el pedido actual después del rollback
+            com.fastfood.model.Pedido pedidoActual = null;
+            Long pedidoId = null;
+            
+            if ("CREAR".equals(operacionRevertida.getTipoOperacion())) {
+                // Para CREAR, el pedido fue eliminado, devolver el que fue eliminado
+                pedidoActual = operacionRevertida.getPedidoDespues();
+            } else if ("ELIMINAR".equals(operacionRevertida.getTipoOperacion())) {
+                // Para ELIMINAR, el pedido fue restaurado
+                pedidoActual = operacionRevertida.getPedidoAntes();
+            } else {
+                // Para cambios de estado, devolver el estado actual del pedido
+                pedidoId = operacionRevertida.getPedidoAntes().getId();
+                Optional<com.fastfood.model.Pedido> pedidoOpt = pedidoService.obtenerPedidoPorId(pedidoId);
+                pedidoActual = pedidoOpt.orElse(operacionRevertida.getPedidoAntes());
+            }
+            
+            Map<String, Object> response = Map.of(
+                "mensaje", "Rollback realizado correctamente",
+                "operacionRevertida", operacionRevertida.getTipoOperacion(),
+                "pedido", pedidoActual
+            );
+            
+            return ResponseEntity.ok(response);
+        } catch (IllegalStateException e) {
+            Map<String, String> error = Map.of(
+                "error", e.getMessage()
+            );
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            Map<String, String> error = Map.of(
+                "error", "Error al realizar rollback: " + e.getMessage()
+            );
+            return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
