@@ -102,14 +102,7 @@ public class PedidoController {
             }
             
             // Pop the most recent operation
-            Optional<OperationRecord> recordOpt = historyStackService.pop();
-            if (recordOpt.isEmpty()) {
-                Map<String, String> errorResponse = new HashMap<>();
-                errorResponse.put("mensaje", "No hay operaciones para revertir");
-                return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
-            }
-            
-            OperationRecord record = recordOpt.get();
+            OperationRecord record = historyStackService.pop().get(); // Safe to call get() after isEmpty check
             
             // Attempt to revert the operation
             try {

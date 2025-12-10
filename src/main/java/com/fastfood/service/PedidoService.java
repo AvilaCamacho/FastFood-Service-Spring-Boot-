@@ -134,7 +134,7 @@ public class PedidoService {
         
         // Get pedido before deleting
         Optional<Pedido> pedidoExistente = pedidoRepository.findById(id);
-        Pedido pedidoEliminado = pedidoExistente.orElse(null);
+        Pedido pedidoEliminado = pedidoExistente.get(); // Safe to call get() after existence check
         
         pedidoRepository.deleteById(id);
         
@@ -160,7 +160,7 @@ public class PedidoService {
                 // Revert CREAR: delete the created pedido
                 if (record.getPedidoDespues() != null) {
                     Long pedidoId = record.getPedidoDespues().getId();
-                    if (pedidoRepository.existsById(pedidoId)) {
+                    if (pedidoId != null && pedidoRepository.existsById(pedidoId)) {
                         pedidoRepository.deleteById(pedidoId);
                     }
                 }
